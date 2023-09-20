@@ -1,4 +1,4 @@
-/* USER CODE BEGIN Header */
+ /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
@@ -60,6 +60,45 @@ static void MX_GPIO_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
+
+const int redTime =5;
+const int yellowTime = 2;
+const int greenTime = 3;
+
+typedef enum LEDState {
+	off,on
+} eLEDState;
+
+typedef enum ColorState {
+	red, yellow, green
+} eColorState;
+
+void SwitchRed (eLEDState state){
+	if (state == on){
+		HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, RESET);
+	}
+	if (state == off) {
+		HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, SET);
+	}
+}
+
+void SwitchYellow (eLEDState state){
+	if (state == on){
+		HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, RESET);
+	}
+	if (state == off) {
+		HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, SET);
+	}
+}
+
+void SwitchGreen (eLEDState state){
+	if (state == on){
+		HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, RESET);
+	}
+	if (state == off) {
+		HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, SET);
+	}
+}
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -89,24 +128,51 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Infinite loop */
+
   /* USER CODE BEGIN WHILE */
-  int counter = 0; //counting variable
-  //start state
+  // Set begin State
+  int counter = 0;
+  eColorState currentState = green;
+  // RED = 5 - // YELLOW = 2 // GREEN = 3
+
   while (1)
   {
-    /* USER CODE END WHILE */
-	  // chỗ này làm ex2
-	  if(counter == 2) {
-		  HAL_GPIO_WritePin ( LED_RED_GPIO_Port , LED_RED_Pin , GPIO_PIN_SET );
-		  HAL_GPIO_WritePin ( LED_YELLOW_GPIO_Port , LED_YELLOW_Pin , GPIO_PIN_RESET );
-	  }
-	  if (counter == 4){
-		  HAL_GPIO_WritePin ( LED_RED_GPIO_Port , LED_RED_Pin , GPIO_PIN_RESET );
-		  HAL_GPIO_WritePin ( LED_YELLOW_GPIO_Port , LED_YELLOW_Pin , GPIO_PIN_SET );
-		  counter = 0;
-	  }
-	  counter++;
+	  eColorState nextState;
+	  	  if (counter == 0){
+	  		  if (currentState == red) {
+	  			  //red to yellow
+	  			  nextState = yellow;
+	  			  counter = yellowTime;
+	  			  SwitchRed(off);
+	  			  SwitchYellow(on);
+	  			  SwitchGreen(off);
+	  		  }
+	  		  if (currentState == yellow) {
+	  			  //yellow to green
+	  			  nextState = green;
+	  			  counter = greenTime;
+	  			  SwitchRed(off);
+	  			  SwitchYellow(off);
+	  			  SwitchGreen(on);
+	  		  }
+	  		  if (currentState == green) {
+	  			  //green to red
+	  			  nextState = red;
+	  			  counter = redTime;
+	  			  SwitchRed(on);
+	  			  SwitchYellow(off);
+	  			  SwitchGreen(off);
+	  		  }
+
+	  	  }
+
+	  	  if (counter > 0) {
+	  		  counter--;
+	  	  }
+	  	  currentState = nextState;
 	  HAL_Delay(1000);
+	  /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -161,10 +227,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin;
+  /*Configure GPIO pins : LED_RED_Pin LED_YELLOW_Pin LED_GREEN_Pin */
+  GPIO_InitStruct.Pin = LED_RED_Pin|LED_YELLOW_Pin|LED_GREEN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
