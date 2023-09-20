@@ -95,6 +95,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+	  // chỗ này làm ex2
 	  if(counter == 2) {
 		  HAL_GPIO_WritePin ( LED_RED_GPIO_Port , LED_RED_Pin , GPIO_PIN_SET );
 		  HAL_GPIO_WritePin ( LED_YELLOW_GPIO_Port , LED_YELLOW_Pin , GPIO_PIN_RESET );
