@@ -23,7 +23,10 @@
 /* USER CODE BEGIN Includes */
 #define T_HRS  12
 
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
 
+//Ex7
 void clearAllClock(){
 	//TODO
 	HAL_GPIO_WritePin(LED_ONE_GPIO_Port, LED_ONE_Pin, SET);
