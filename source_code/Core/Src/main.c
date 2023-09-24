@@ -137,6 +137,7 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
+// Ex8
 void setNumberOnClock(int number){
 	clearAllClock();
 	switch (number) {
